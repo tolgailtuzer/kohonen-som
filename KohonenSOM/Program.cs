@@ -10,13 +10,13 @@ namespace KohonenSOM
 {
     class Program
     {
-        public static List<List<double>> data;
-        public static List<List<double>> weights;
-        public static Dictionary<int, List<double>> features;
-        public static List<string> columns;
-        public static List<List<double>> neuron_locs;
-        public static int grid_x;
-        public static int grid_y;
+        public static List<List<double>> data;//all data read from the file
+        public static List<List<double>> weights;//SOM network weights
+        public static Dictionary<int, List<double>> features;//data features and elements
+        public static List<string> columns;//Column names
+        public static List<List<double>> neuron_locs;//output layer neuron coordinates
+        public static int grid_x;//output layer x axis size
+        public static int grid_y;//output layer y axis size
         public static Dictionary<int, int> index_map = new Dictionary<int, int>();
         static void Main(string[] args)
         {
@@ -28,7 +28,7 @@ namespace KohonenSOM
             ReadFile.Read("emlak-veri.csv");
             //ReadFile.Read("diamond.csv");
             Console.WriteLine("Running SOM...");
-            SOM.Run(grid_x, grid_y, 100*(grid_x*grid_y), 0.1, (grid_x + grid_y) / 2);
+            SOM.Run(grid_x, grid_y, 100 * (grid_x * grid_y), 0.1, (grid_x + grid_y) / 2);
             sw.Stop();
             Console.WriteLine("-----------------------Weights-----------------------");
             for (int i = 0; i < weights.Count; i++)
@@ -45,22 +45,6 @@ namespace KohonenSOM
 
             Application.EnableVisualStyles();
             Application.Run(new Visualize());
-
-            //for (int i = 0; i < Program.columns.Count(); i++)
-            //{
-            //    Console.Write(columns[i] + " ");
-            //}
-            //Console.WriteLine();
-            //for (int i = 0; i < Program.data.Count(); i++)
-            //{
-            //    Console.Write(i + " ");
-            //    for (int j = 0; j < Program.data[i].Count(); j++)
-            //    {
-            //        Console.Write(Program.data[i][j] + " ");
-            //    }
-            //    Console.WriteLine();
-            //}
-            //Console.WriteLine();
         }
     }
 }

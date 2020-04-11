@@ -7,3 +7,12 @@ C:\Users\bilin\Desktop\KohonenSOM\KohonenSOM\obj\Debug\KohonenSOM.exe
 C:\Users\bilin\Desktop\KohonenSOM\KohonenSOM\obj\Debug\KohonenSOM.pdb
 C:\Users\bilin\Desktop\KohonenSOM\KohonenSOM\obj\Debug\KohonenSOM.Visualize.resources
 C:\Users\bilin\Desktop\KohonenSOM\KohonenSOM\obj\Debug\KohonenSOM.csproj.GenerateResource.cache
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\bin\Debug\KohonenSOM.exe.config
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\bin\Debug\KohonenSOM.exe
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\bin\Debug\KohonenSOM.pdb
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\obj\Debug\KohonenSOM.csprojAssemblyReference.cache
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\obj\Debug\KohonenSOM.Visualize.resources
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\obj\Debug\KohonenSOM.csproj.GenerateResource.cache
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\obj\Debug\KohonenSOM.csproj.CoreCompileInputs.cache
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\obj\Debug\KohonenSOM.exe
+C:\Users\bilin\Desktop\Github Repo\kohonen-som\KohonenSOM\obj\Debug\KohonenSOM.pdb

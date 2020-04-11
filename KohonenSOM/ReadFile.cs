@@ -10,21 +10,21 @@ namespace KohonenSOM
 {
     class ReadFile
     {
-        
+
         public static void Read(string path)
         {
             Console.WriteLine("Reading data...");
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");//for separating decimal numbers with dots
             StreamReader sr = new StreamReader(path);
             Program.data = new List<List<double>>();
             Program.features = new Dictionary<int, List<double>>();
             Dictionary<int, List<string>> categorical_columns = new Dictionary<int, List<string>>();
             Dictionary<int, HashSet<string>> categorical_column_names = new Dictionary<int, HashSet<string>>();
-            int i=0, j;
+            int i = 0, j;
             double temp;
             Program.columns = new List<string>();
             string[] temp_columns = sr.ReadLine().Split(',');
-            foreach (string str in temp_columns)
+            foreach (string str in temp_columns)//Reads column names
             {
                 Program.columns.Add(str);
             }
@@ -33,27 +33,27 @@ namespace KohonenSOM
             {
                 string[] line = sr.ReadLine().Split(',');
                 List<double> temp_data = new List<double>();
-                for(j = 0;j<line.Length;j++)
-                {          
-                    if (Double.TryParse(line[j], out temp))
+                for (j = 0; j < line.Length; j++)
+                {
+                    if (Double.TryParse(line[j], out temp))//Checks for categorical features
                     {
                         temp_data.Add(temp);
-                        if (i == 0)
+                        if (i == 0)//In the beginning creates lists for features
                         {
                             List<double> temp_features = new List<double>();
                             temp_features.Add(temp);
                             Program.features.Add(j, temp_features);
-                            Program.index_map.Add(index, j);
+                            Program.index_map.Add(index, j);//Index map keeps non-categorical features indices
                         }
-                        else
+                        else//If there is a list for current feature, value adds to this list
                         {
                             Program.features[j].Add(temp);
                         }
                         index++;
                     }
                     else
-                    {             
-                        if(i==0)
+                    {
+                        if (i == 0)//In the beginning creates lists for categorical features
                         {
                             List<string> temp_categorical = new List<string>();
                             HashSet<string> temp_categorical_names = new HashSet<string>();
@@ -62,13 +62,13 @@ namespace KohonenSOM
                             categorical_columns.Add(j, temp_categorical);
                             categorical_column_names.Add(j, temp_categorical_names);
                         }
-                        else
+                        else// If there is a list for current categorical feature, value adds to this list
                         {
                             categorical_columns[j].Add(line[j]);
                             categorical_column_names[j].Add(line[j]);
                         }
-                                               
-                    }       
+
+                    }
                 }
                 Program.data.Add(temp_data);
                 i++;

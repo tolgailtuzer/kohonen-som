@@ -27,9 +27,8 @@ namespace KohonenSOM
             Program.weights = new List<List<double>>();
             Random random = new Random();
             Program.neuron_locs = new List<List<double>>();
-            for(int i=0;i<grid_x;i++)
-            {
-                
+            for(int i=0;i<grid_x;i++)//fills neuron coordinate list
+            {               
                 for(int j=0;j<grid_y;j++)
                 {
                     List<double> temp = new List<double>();
@@ -43,8 +42,11 @@ namespace KohonenSOM
                 List<double> temp = new List<double>();
                 for (int j = 0; j < feature_count; j++)
                 {
-                    if (Program.index_map.ContainsKey(j)) temp.Add(random.NextDouble() * (Program.features[Program.index_map[j]].Max() - Program.features[Program.index_map[j]].Min()) + Program.features[Program.index_map[j]].Min());
-                    else
+                    if (Program.index_map.ContainsKey(j))//if feature is non-categorical, weights determine based on the minimum, maximum points of the feature and random coefficient
+                    {
+                        temp.Add(random.NextDouble() * (Program.features[Program.index_map[j]].Max() - Program.features[Program.index_map[j]].Min()) + Program.features[Program.index_map[j]].Min());
+                    }
+                    else//if feature is categorical determines weights randomly 0 or 1
                     {
                         double rnd = random.NextDouble();
                         if (rnd < 0.5) temp.Add(0);
@@ -54,24 +56,14 @@ namespace KohonenSOM
                 Program.weights.Add(temp);
             }
 
-            //for (int i = 0; i <Program.weights.Count; i++)
-            //{
-            //    string splitter = "";
-            //    for (int j = 0; j < Program.weights[0].Count; j++)
-            //    {
-            //        Console.Write(splitter + Program.weights[i][j]);
-            //        splitter = ",";
-            //    }
-            //    Console.WriteLine();
-            //}
-            double t1_init = iteration / Math.Log(sigma_init);
-            double t2_init = iteration;
-            for (int iter = 0; iter < iteration; iter++)
+            double t1_init = iteration / Math.Log(sigma_init);//t1_init constant for sigma calculation
+            double t2_init = iteration;//t1_init constant for learning_rate calculation
+            for (int iter = 0; iter < iteration; iter++)//On each iteration, algorithm pick one sample randomly and trains network with selected sample
             {
                 int i = random.Next(Program.data.Count);
                 double best_node_value = int.MaxValue;
                 int best_node_index = 0;
-                for (int j = 0; j < neuron_count; j++)
+                for (int j = 0; j < neuron_count; j++)//finds nearest neuron to sample with using euclidean distance
                 {
                     double distance = EuclideanDistance(Program.data[i], Program.weights[j]);
                     if (distance < best_node_value)
@@ -80,11 +72,11 @@ namespace KohonenSOM
                         best_node_index = j;
                     }
                 }
-
+                //Update sigma and learning rate
                 double sigma = sigma_init * Math.Exp(-iter / t1_init);
                 double learning_rate = learning_rate_init * Math.Exp(-iter / t2_init);
 
-                for (int j = 0; j < neuron_count; j++)
+                for (int j = 0; j < neuron_count; j++)//updates weights with using gaussian function, this function helps to more updating of neurons which is nearby to best neuron
                 {
                     double distance = EuclideanDistance(Program.weights[j], Program.weights[best_node_index]);
                     double h_ji = Math.Exp(-(Math.Pow(distance, 2) / (2 * Math.Pow(sigma, 2))));

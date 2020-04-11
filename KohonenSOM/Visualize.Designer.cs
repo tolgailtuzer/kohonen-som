@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.columns = new System.Windows.Forms.ComboBox();
             this.visualize_data = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.low_color = new System.Windows.Forms.Button();
             this.high_color = new System.Windows.Forms.Button();
+            this.columns = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -58,17 +58,6 @@
             this.dataGridView.Size = new System.Drawing.Size(632, 486);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
-            // 
-            // columns
-            // 
-            this.columns.BackColor = System.Drawing.Color.White;
-            this.columns.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.columns.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.columns.FormattingEnabled = true;
-            this.columns.Location = new System.Drawing.Point(12, 8);
-            this.columns.Name = "columns";
-            this.columns.Size = new System.Drawing.Size(206, 21);
-            this.columns.TabIndex = 1;
             // 
             // visualize_data
             // 
@@ -115,6 +104,17 @@
             this.high_color.UseVisualStyleBackColor = false;
             this.high_color.Click += new System.EventHandler(this.high_color_Click);
             // 
+            // columns
+            // 
+            this.columns.BackColor = System.Drawing.Color.White;
+            this.columns.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.columns.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.columns.FormattingEnabled = true;
+            this.columns.Location = new System.Drawing.Point(12, 8);
+            this.columns.Name = "columns";
+            this.columns.Size = new System.Drawing.Size(206, 21);
+            this.columns.TabIndex = 1;
+            // 
             // Visualize
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -139,11 +139,11 @@
         }
 
         #endregion
-        private System.Windows.Forms.ComboBox columns;
         private System.Windows.Forms.Button visualize_data;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button low_color;
         private System.Windows.Forms.Button high_color;
+        private System.Windows.Forms.ComboBox columns;
     }
 }

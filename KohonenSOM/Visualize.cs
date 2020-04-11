@@ -66,7 +66,7 @@ namespace KohonenSOM
             }
 
         }
-        private Color HeatMapColor(double value, double min, double max)
+        private Color HeatMapColor(double value, double min, double max)//Determines value of color according to min and max
         {
 
             // Example: Take the RGB
