@@ -27,9 +27,9 @@ namespace KohonenSOM
             Program.weights = new List<List<double>>();
             Random random = new Random();
             Program.neuron_locs = new List<List<double>>();
-            for(int i=0;i<grid_x;i++)//fills neuron coordinate list
+            for(int i=0;i<2*grid_x-1;i+=2)//fills neuron coordinate list with 1 cell blank for visualization.
             {               
-                for(int j=0;j<grid_y;j++)
+                for(int j=0;j<2*grid_y-1;j+=2)
                 {
                     List<double> temp = new List<double>();
                     temp.Add(i);

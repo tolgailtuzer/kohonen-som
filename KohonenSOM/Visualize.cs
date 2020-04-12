@@ -17,28 +17,25 @@ namespace KohonenSOM
         {
             InitializeComponent();
         }
-        public Color firstColour = Color.RoyalBlue;
+        public Color firstColour = Color.DarkBlue;
+        //public Color firstColour = Color.RoyalBlue;
         public Color secondColour = Color.LightSkyBlue;
         public double Max_Value = double.MinValue;
         public double Min_Value = double.MaxValue;
         private void Visualize_Load(object sender, EventArgs e)
         {
-            for (int i = 0; i < Program.columns.Count; i++)
-            {
-                this.columns.Items.Add(Program.columns[i]);
-            }
-            this.columns.SelectedIndex = 0;
-            visualize_data.PerformClick();
-
+            visualize_data.PerformClick();//Click for default visualization
         }
+
         private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             this.dataGridView.ClearSelection();
         }
-        void fillData(/*List<List<double>>*/double [,] data)
+
+        void FillGrid(double[,] data)//Fills grids with CreateHeatMapForSOM data
         {
-            int maxRow = Program.grid_x;
-            int maxCol = Program.grid_y;
+            int maxRow = 2*Program.grid_x-1;
+            int maxCol = 2*Program.grid_y-1;
 
             dataGridView.RowHeadersVisible = false;
             dataGridView.ColumnHeadersVisible = false;
@@ -59,21 +56,14 @@ namespace KohonenSOM
             {
                 for (int c = 0; c < maxRow; c++)
                 {
-                    dataGridView[r, c].Style.BackColor = HeatMapColor(data[r,c], Min_Value, Max_Value);
-                    //dataGridView[r, c].Style.BackColor = HeatMapColor(data[r][c], Program.features[this.columns.SelectedIndex].Min(), Program.features[this.columns.SelectedIndex].Max());
-                    //dataGridView[r, c].Value = data[r][c].ToString();
+                    dataGridView[r, c].Style.BackColor = HeatMapColor(data[r, c], Min_Value, Max_Value);
+                    //dataGridView[r, c].Value = data[r,c].ToString();
                 }
             }
 
         }
         private Color HeatMapColor(double value, double min, double max)//Determines value of color according to min and max
         {
-
-            // Example: Take the RGB
-            //135-206-250 // Light Sky Blue
-            // 65-105-225 // Royal Blue
-            // 70-101-25 // Delta
-
             int rOffset = Math.Max(firstColour.R, secondColour.R);
             int gOffset = Math.Max(firstColour.G, secondColour.G);
             int bOffset = Math.Max(firstColour.B, secondColour.B);
@@ -94,20 +84,7 @@ namespace KohonenSOM
         {
             this.dataGridView.Rows.Clear();
             this.dataGridView.Columns.Clear();
-            //List<List<double>> data = new List<List<double>>();
-            //List<double> temp = new List<double>();
-            //for (int i = 1; i <= Program.weights.Count; i++)
-            //{
-            //    temp.Add(Program.weights[i - 1][this.columns.SelectedIndex]);
-            //    if (i % Program.grid_x == 0)
-            //    {
-            //        data.Add(temp);
-            //        temp = new List<double>();
-            //    }
-            //}
-            ////data[0][0] = Program.features[this.columns.SelectedIndex].Max();
-            //fillData(data);
-            fillData(CreateHeatMapForSOM());
+            FillGrid(CreateHeatMapForSOM());
 
         }
 
@@ -125,38 +102,95 @@ namespace KohonenSOM
             secondColour = colorDialog1.Color;
         }
 
-        public double[,] CreateHeatMapForSOM()
+        public double[,] CreateHeatMapForSOM()//Creates heatmap with creating u-matrix
         {
             List<List<int>> neighbours = new List<List<int>>();
-            for (int i = 0; i < Program.neuron_locs.Count; i++)
+            for (int i = 0; i < Program.neuron_locs.Count; i++)//find neighbours of each neuron
             {
                 List<int> temp = new List<int>();
                 for (int j = 0; j < Program.neuron_locs.Count; j++)
                 {
-                    if (i != j && SOM.EuclideanDistance(Program.neuron_locs[i], Program.neuron_locs[j]) <= 1)
+                    if (i != j && SOM.EuclideanDistance(Program.neuron_locs[i], Program.neuron_locs[j]) <= 2)
                     {
                         temp.Add(j);
                     }
                 }
                 neighbours.Add(temp);
             }
-            double[,] heat_map = new double[Program.grid_x, Program.grid_y];
-            for (int i = 0; i < Program.neuron_locs.Count; i++)
+
+            double[,] heat_map = new double[2 * Program.grid_x - 1, 2 * Program.grid_y - 1];
+
+            for (int i = 0; i < Program.neuron_locs.Count; i++)// fill cells between neurons with distances
             {
-                double sum = 0;
                 for (int j = 0; j < neighbours[i].Count; j++)
                 {
-                    sum += SOM.EuclideanDistance(Program.weights[i], Program.weights[neighbours[i][j]]);
+                    if (Program.neuron_locs[i][0] == Program.neuron_locs[neighbours[i][j]][0])//if they are in same x axis
+                    {
+                        if (Program.neuron_locs[neighbours[i][j]][1] < Program.neuron_locs[i][1])//left-side check
+                        {
+                            if (heat_map[Convert.ToInt32(Program.neuron_locs[i][0]), Convert.ToInt32(Program.neuron_locs[i][1])] == 0)
+                                heat_map[Convert.ToInt32(Program.neuron_locs[i][0]), Convert.ToInt32(Program.neuron_locs[i][1]) - 1] = SOM.EuclideanDistance(Program.weights[i], Program.weights[neighbours[i][j]]);
+                        }
+                        else if (Program.neuron_locs[neighbours[i][j]][1] > Program.neuron_locs[i][1])//right-side check
+                        {
+                            if (heat_map[Convert.ToInt32(Program.neuron_locs[neighbours[i][j]][0]), Convert.ToInt32(Program.neuron_locs[neighbours[i][j]][1])] == 0)
+                                heat_map[Convert.ToInt32(Program.neuron_locs[neighbours[i][j]][0]), Convert.ToInt32(Program.neuron_locs[neighbours[i][j]][1]) - 1] = SOM.EuclideanDistance(Program.weights[i], Program.weights[neighbours[i][j]]);
+                        }
+                    }
+                    else//if they are in same y axis
+                    {
+                        if (Program.neuron_locs[neighbours[i][j]][0] < Program.neuron_locs[i][0])//up-side check
+                        {
+                            if (heat_map[Convert.ToInt32(Program.neuron_locs[i][0]), Convert.ToInt32(Program.neuron_locs[i][1])] == 0)
+                                heat_map[Convert.ToInt32(Program.neuron_locs[i][0]) - 1, Convert.ToInt32(Program.neuron_locs[i][1])] = SOM.EuclideanDistance(Program.weights[i], Program.weights[neighbours[i][j]]);
+                        }
+                        else if (Program.neuron_locs[neighbours[i][j]][0] > Program.neuron_locs[i][0])//down-side check
+                        {
+                            if (heat_map[Convert.ToInt32(Program.neuron_locs[neighbours[i][j]][0]), Convert.ToInt32(Program.neuron_locs[neighbours[i][j]][1])] == 0)
+                                heat_map[Convert.ToInt32(Program.neuron_locs[neighbours[i][j]][0]) - 1, Convert.ToInt32(Program.neuron_locs[neighbours[i][j]][1])] = SOM.EuclideanDistance(Program.weights[i], Program.weights[neighbours[i][j]]);
+                        }
+                    }
                 }
-                if(sum / neighbours[i].Count<Min_Value)
+            }
+            for (int i = 0; i < 2 * Program.grid_x - 1; i++)//fills neuron cells with surrounded cell averages
+            {
+                for (int j = 0; j < 2 * Program.grid_y - 1; j++)
                 {
-                    Min_Value = sum / neighbours[i].Count;
+                    if (heat_map[i, j]==0)
+                    {
+                        double sum = 0;
+                        int count = 0;
+                        if (j - 1 >= 0)
+                        {
+                            sum += heat_map[i, j - 1];
+                            count++;
+                        }
+                        if (i - 1 >= 0)
+                        {
+                            sum += heat_map[i - 1, j];
+                            count++;
+                        }
+                        if (i + 1 <= 2 * Program.grid_x - 2)
+                        {
+                            sum += heat_map[i + 1, j];
+                            count++;
+                        }
+                        if (j + 1 <= 2 * Program.grid_y - 2)
+                        {
+                            sum += heat_map[i, j + 1];
+                            count++;
+                        }
+                        heat_map[i, j] = sum / count;
+                    }                  
                 }
-                if(sum / neighbours[i].Count>Max_Value)
+            }
+            for (int i = 0; i < 2 * Program.grid_x - 1; i++)
+            {
+                for (int j = 0; j < 2 * Program.grid_y - 1; j++)
                 {
-                    Max_Value = sum / neighbours[i].Count;
+                    if (heat_map[i, j] < Min_Value) Min_Value = heat_map[i, j];
+                    if (heat_map[i, j] > Max_Value) Max_Value = heat_map[i, j];
                 }
-                heat_map[Convert.ToInt32(Program.neuron_locs[i][0]), Convert.ToInt32(Program.neuron_locs[i][1])] = sum / neighbours[i].Count;
             }
             return heat_map;
         }

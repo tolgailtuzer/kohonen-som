@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace KohonenSOM
 {
-    class ReadFile
+    class FileOperations
     {
-
         public static void Read(string path)
         {
             Console.WriteLine("Reading data...");
@@ -73,11 +72,30 @@ namespace KohonenSOM
                 Program.data.Add(temp_data);
                 i++;
             }
+            sr.Close();
             //DataPreprocess.NormalizeData(features);
             Console.WriteLine("Applying OneHotEncoder for categorical features...");
             DataPreprocess.OneHotEncoding(categorical_columns, categorical_column_names);
-
-
         }
+        public static void Write(string path)
+        {
+            StreamWriter sw = new StreamWriter(path);
+            Console.WriteLine("-----------------------Weights-----------------------");
+            sw.WriteLine("-----------------------Weights-----------------------");
+            for (int i = 0; i < Program.weights.Count; i++)
+            {
+                string splitter = "";
+                for (int j = 0; j < Program.weights[0].Count; j++)
+                {
+                    Console.Write(splitter + Math.Round(Program.weights[i][j],4));
+                    sw.Write(splitter + Math.Round(Program.weights[i][j], 4));
+                    splitter = ",";
+                }
+                Console.WriteLine();
+                sw.WriteLine();
+            }
+            sw.Close();
+        }
+
     }
 }

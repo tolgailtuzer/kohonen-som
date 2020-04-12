@@ -24,25 +24,12 @@ namespace KohonenSOM
             grid_y = 10;
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            //ReadFile.Read("taurus.csv");
-            ReadFile.Read("emlak-veri.csv");
-            //ReadFile.Read("diamond.csv");
+            FileOperations.Read(@"..\..\..\Datasets\emlak-veri.csv");
             Console.WriteLine("Running SOM...");
-            SOM.Run(grid_x, grid_y, 100 * (grid_x * grid_y), 0.1, (grid_x + grid_y) / 2);
+            SOM.Run(grid_x, grid_y, 500 * (grid_x * grid_y), 0.1, (grid_x + grid_y) / 2);
             sw.Stop();
-            Console.WriteLine("-----------------------Weights-----------------------");
-            for (int i = 0; i < weights.Count; i++)
-            {
-                string splitter = "";
-                for (int j = 0; j < weights[0].Count; j++)
-                {
-                    Console.Write(splitter + weights[i][j]);
-                    splitter = ",";
-                }
-                Console.WriteLine();
-            }
+            FileOperations.Write("output_weights.txt");
             Console.WriteLine("Total time: " + sw.Elapsed);
-
             Application.EnableVisualStyles();
             Application.Run(new Visualize());
         }
