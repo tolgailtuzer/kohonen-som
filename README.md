@@ -1,2 +1,1 @@
-# kohonen-som
-Kohonen Self-organizing map
+# Kohonen Self-organizing map
